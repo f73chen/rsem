@@ -1,0 +1,237 @@
+# bowtie/1.2.2
+- name: bowtie
+  version: 1.2.2
+  build_type: custom
+  build_args:
+    prereq_args:
+      prereq_args:
+        sha256: 3974a860433e4da4d13fa3f76318befe1e86fa6377066d48edf9afe6843a511d
+        url: https://github.com/BenLangmead/bowtie/releases/download/v1.2.2_p1/bowtie-1.2.2-linux-x86_64.zip
+      prereq_type: download
+    prereq_type: extract
+    steps:
+      - build_args:
+          from:
+            - bowtie
+            - bowtie-align-l
+            - bowtie-align-l-debug
+            - bowtie-align-s
+            - bowtie-align-s-debug
+            - bowtie-build
+            - bowtie-build-l
+            - bowtie-build-l-debug
+            - bowtie-build-s
+            - bowtie-build-s-debug
+            - bowtie-inspect
+            - bowtie-inspect-l
+            - bowtie-inspect-l-debug
+            - bowtie-inspect-s
+            - bowtie-inspect-s-debug
+          to: bin/
+          cwd: bowtie-1.2.2-linux-x86_64
+        build_type: copy
+      - build_args:
+          from:
+            - doc
+            - genomes
+            - indexes
+            - reads
+            - scripts
+            - SeqAn-1.1
+            - AUTHORS
+            - LICENSE
+            - MANUAL
+            - MANUAL.markdown
+            - NEWS
+            - TUTORIAL
+            - VERSION
+          cwd: bowtie-1.2.2-linux-x86_64
+        build_type: copy
+
+# python/3.6
+- name: python
+  version: 3.6
+  build_type: custom
+  build_args:
+    steps:
+    - build_type: autotools
+      build_args:
+       prereq_args:
+         prereq_args:
+           md5: 51aac91bdf8be95ec0a62d174890821a
+           url: https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz
+         prereq_type: download
+       prereq_type: extract
+       configure:
+        - --enable-shared
+        - --enable-ipv6
+        - --enable-loadable-sqlite-extensions
+        - --enable-optimizations
+        - --with-dbmliborder=bdb:gdbm
+        - --with-computed-gotos
+        - --with-ensurepip=yes
+        - --with-system-expat
+        - --with-system-libmpdec
+        - --with-system-ffi
+    - build_args: # YAML is included so that find-modules will work correctly in the built Python
+        package: PyYAML
+        version: 5.1.2
+      build_type: pip
+      scan_dirs: true
+    - build_args:
+        package: pip
+        version: 19.0.3
+      build_type: pip
+      scan_dirs: true
+    - command: [ "ln", "-s", "/usr/share/pyshared/lsb_release.py", "{output_dir}/lib/python3.6/lsb_release.py" ]
+  system_depends:
+  - name: libmpdec-dev
+  - name: libreadline-dev
+    permitted_os: ["Ubuntu18.04"]
+  - name: libreadline6-dev
+    permitted_os: ["Debian8.11"]
+  - name: libncurses5-dev
+  - name: libsqlite3-dev
+  - name: libssl-dev
+  - name: uuid-dev
+  - name: libffi-dev
+  - name: tk8.6-dev
+
+# java/8
+- name: java
+  version: 8
+  build_type: extract
+  build_args:
+    prereq_args:
+      sha256: 4ee3b37cb70fe1dbfad0ef449fe2c5fec43d81bd37ef0a65ec9f65afac190b4f
+      url: https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/releases/download/jdk8u222-b10/OpenJDK8U-jdk_x64_linux_8u222b10.tar.gz
+    prereq_type: download
+  system_depends:
+    - name: libfontconfig1-dev
+
+# rstats-cairo/3.6
+- name: rstats-cairo
+  version: 3.6
+  build_type: custom
+  build_args:
+    steps:
+      - build_args:
+          prereq_args:
+            prereq_args:
+              md5: f5003472d58a3d3765a1c537fdae71d5
+              url: http://cran.utstat.utoronto.ca/src/base/R-3/R-3.6.1.tar.gz
+            prereq_type: download
+          prereq_type: extract
+          configure: ["--with-x=no --with-cairo=yes --with-libpng=yes --enable-R-shlib"]
+        build_type: autotools
+      - build_args:
+          package: devtools
+          # version: don't set, devtools is needed for versioned cran installs
+        build_type: cran
+        scan_dirs: true
+  depends:
+    - name: java
+      version: 8
+  system_depends:
+    - name: libcurl4-openssl-dev
+    - name: libbz2-dev
+    - name: libncurses5-dev
+    - name: libreadline-dev
+      permitted_os: ["Ubuntu18.04"]
+    - name: libreadline6-dev
+      permitted_os: ["Debian8.11"]
+    - name: liblzma-dev
+    - name: libpcre3-dev
+    - name: gfortran
+      required_at: build
+    - name: libgfortran-7-dev
+      permitted_os: ["Ubuntu18.04"]
+    - name: libgfortran-4.9-dev
+      permitted_os: ["Debian8.11"]
+
+# rstats/3.6
+- name: rstats
+  version: 3.6
+  build_type: custom
+  build_args:
+    steps:
+      - build_args:
+          prereq_args:
+            prereq_args:
+              md5: f5003472d58a3d3765a1c537fdae71d5
+              url: http://cran.utstat.utoronto.ca/src/base/R-3/R-3.6.1.tar.gz
+            prereq_type: download
+          prereq_type: extract
+          configure: ["--with-x=no"]
+        build_type: autotools
+      - build_args:
+          package: devtools
+          # version: don't set, devtools is needed for versioned cran installs
+        build_type: cran
+        scan_dirs: true
+  system_depends:
+    - name: libcurl4-openssl-dev
+    - name: libbz2-dev
+    - name: libncurses5-dev
+    - name: libreadline-dev
+      permitted_os: ["Ubuntu18.04"]
+    - name: libreadline6-dev
+      permitted_os: ["Debian8.11"]
+    - name: liblzma-dev
+    - name: libpcre3-dev
+    - name: gfortran
+      required_at: build
+    - name: libgfortran-7-dev
+      permitted_os: ["Ubuntu18.04"]
+    - name: libgfortran-4.9-dev
+      permitted_os: ["Debian8.11"]
+
+# bioconductor/3.8-rstats3.6
+- name: bioconductor
+  version: 3.8-rstats3.6
+  build_type: cran
+  build_args:
+    package: BiocManager
+    version: 1.30.4
+  depends:
+  - name: rstats
+    version: 3.6
+
+# perl/"5.30"
+- name: perl
+  version: "5.30"
+  build_type: perl
+  build_args:
+    prereq_args:
+      prereq_args:
+        md5: f399f3aaee90ddcff5eadd3bccdaacc0
+        url: https://www.cpan.org/src/5.0/perl-5.30.1.tar.xz
+      prereq_type: download
+    prereq_type: extract
+  system_depends:
+  - name: libreadline-dev
+    permitted_os: ["Ubuntu18.04"]
+  - name: libreadline6-dev
+    permitted_os: ["Debian8.11"]
+
+# rsem/1.3.3
+- name: rsem
+  version: 1.3.3
+  build_type: make
+  build_args:
+    prereq_type: git
+    prereq_args:
+      url: https://github.com/deweylab/RSEM.git
+      tag: v1.3.0
+  depends:
+  - name: bowtie
+    version: 1.2.2
+    required_at: soft_runtime
+  - name: python
+    version: 3.6
+  - name: rstats-cairo
+    version: 3.6
+  - name: bioconductor
+    version: 3.8-rstats3.6
+  - name: perl
+    version: "5.30"
