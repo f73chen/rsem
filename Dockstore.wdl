@@ -4,14 +4,16 @@ workflow rsem {
 input {
   File inputBam
   String outputFileNamePrefix = basename(inputBam, ".bam")
+  String docker = "g3chen/rsem:1.0"
 }
 
 # run RSEM
-call runRsem { input: inputFile = inputBam, sampleID = outputFileNamePrefix }
+call runRsem { input: inputFile = inputBam, sampleID = outputFileNamePrefix, docker = docker }
 
 parameter_meta {
   inputBam: "Input BAM file with aligned RNAseq reads."
   outputFileNamePrefix: "Output prefix, customizable. Default is the input file's basename."
+  docker: "Docker container to run the workflow in"
 }
 
 meta {
@@ -50,6 +52,7 @@ input {
   String modules
   Int timeout = 48
   Int jobMemory = 12
+  String docker
 }
 
 parameter_meta {
@@ -58,6 +61,7 @@ parameter_meta {
  rsemIndexDir: "Base of RSEM indexes, includes the directory common file prefix"
  modules: "Names and versions of modules"
  timeout: "Timeout in hours, needed to override imposed limits"
+ docker: "Docker container to run the workflow in"
 }
 
 command <<<
@@ -65,6 +69,7 @@ command <<<
 >>>
 
 runtime {
+  docker:  "~{docker}"
   memory:  "~{jobMemory} GB"
   modules: "~{modules}"
   timeout: "~{timeout}"
