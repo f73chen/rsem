@@ -40,6 +40,7 @@ task find_tools {
         String message = read_string(stdout())
     }
     runtime {
-        docker: "g3chen/rsem:1.0"
+        docker: "g3chen/rsem@sha256:dc6358a8e6ccd29b7ccee4f5f8d36d3ba71e7f2164cda5009516f9cf76e3fa54"
+        modules: "rsem/1.3.3"
     }
 }

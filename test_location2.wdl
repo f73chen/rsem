@@ -4,19 +4,13 @@ workflow test_location {
 
 task find_tools {
     command <<<
-        ls -l /data/test_star_fusion/reads_1.fq.gz
-        echo "@@@@@@@@@@@@@"
-        ls -l /data/test_star_fusion/reads_2.fq.gz
-        echo "@@@@@@@@@@@@@"
-        ls -l /data/test_star_fusion/test.Chimeric.out.junction
-        echo "@@@@@@@@@@@@@"
-        ls -l /data/STAR_FUSION_GENOME_ROOT/ctat_genome_lib_build_dir
+        ls -l /data/HG38_RSEM_INDEX_ROOT/hg38_random_rsem
         echo "@@@@@@@@@@@@@"
     >>>
     output{
         String message = read_string(stdout())
     }
     runtime {
-        docker: "g3chen/starfusion:2.0"
+        docker: "g3chen/rsem@sha256:dc6358a8e6ccd29b7ccee4f5f8d36d3ba71e7f2164cda5009516f9cf76e3fa54"
     }
 }
