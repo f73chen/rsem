@@ -1,0 +1,6 @@
+{
+  "default_runtime_attributes": {
+    "docker": "g3chen/rsem@sha256:dc6358a8e6ccd29b7ccee4f5f8d36d3ba71e7f2164cda5009516f9cf76e3fa54",
+    "docker_volume": "/home/ubuntu/Downloads/sample_data:/data"
+  }
+}
