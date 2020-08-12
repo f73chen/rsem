@@ -1,0 +1,7 @@
+{
+  "rsem.inputBam": "/home/ubuntu/data/sample_data/rsem/OCT_011325_Mo_P_WT_OCT-01-1325-TS.Aligned.toTranscriptome.out_subsampled.bam",
+  "rsem.runRsem_modules": "rsem/1.3.3 hg38-rsem-index/1.3.0",
+  "rsem.runRsem_rsemIndexDir": "$HG38_RSEM_INDEX_ROOT/hg38_random_rsem",
+  "rsem.outputFileNamePrefix": "OCT_011325_Mo_P_WT_OCT-01-1325-TS"
+}
+
